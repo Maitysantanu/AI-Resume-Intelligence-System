@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>Login</title>
+<link rel="stylesheet" href="/static/login.css">
+</head>
+
+<body>
+
+<header>AI Resume Intelligence System</header>
+
+<div class="login-container">
+
+<h2>Login</h2>
+
+<input id="login_email" type="email" placeholder="Email">
+
+<input id="login_password" type="password" placeholder="Password">
+
+<select id="login_role" onchange="toggleAdminKeyLogin()">
+<option value="user">User</option>
+<option value="hr">Admin</option>
+</select>
+
+<div id="admin_key_login_box" style="display:none;">
+<input id="login_admin_key" placeholder="Admin Key">
+</div>
+
+<button onclick="login()">Login</button>
+
+<div class="nav">
+<p>New user?</p>
+<a href="/static/signup.html">Signup</a>
+</div>
+
+</div>
+
+<script src="/static/script.js"></script>
+
+</body>
+</html>

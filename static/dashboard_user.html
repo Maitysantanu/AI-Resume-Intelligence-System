@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>User Dashboard</title>
+
+<link rel="stylesheet" href="/static/user_dashboard.css">
+
+</head>
+
+<body>
+
+<header>User Dashboard</header>
+
+<div class="user-container">
+
+<h3>Upload Resume</h3>
+
+<input type="file" id="resume">
+
+<button onclick="uploadResume()">Upload Resume</button>
+
+<hr>
+
+<button onclick="predictRole()">Predict Job Role</button>
+
+<button onclick="atsScore()">Check ATS Score</button>
+
+<div id="result" class="result"></div>
+
+</div>
+
+<script src="/static/script.js"></script>
+
+</body>
+
+</html>

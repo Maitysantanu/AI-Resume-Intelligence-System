@@ -1,0 +1,147 @@
+/* ===== Page Background ===== */
+
+body{
+    font-family: Arial, Helvetica, sans-serif;
+    background: linear-gradient(135deg,#ff9966,#ff5e62);
+    margin:0;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+}
+
+
+/* ===== Header ===== */
+
+header{
+    background:#ff5e62;
+    color:white;
+    padding:20px;
+    text-align:center;
+    font-size:24px;
+    font-weight:bold;
+    box-shadow:0 4px 10px rgba(0,0,0,0.25);
+}
+
+
+/* ===== Signup Container ===== */
+
+.signup-container{
+    width:380px;
+    margin:70px auto;
+    background:white;
+    padding:35px;
+    border-radius:12px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.25);
+}
+
+
+/* ===== Title ===== */
+
+.signup-container h2{
+    text-align:center;
+    margin-bottom:25px;
+    color:#333;
+}
+
+
+/* ===== Inputs ===== */
+
+input,select{
+    width:100%;
+    padding:12px;
+    margin-top:12px;
+    border:1px solid #ccc;
+    border-radius:8px;
+    font-size:14px;
+}
+
+
+/* ===== Input Focus ===== */
+
+input:focus,select:focus{
+    outline:none;
+    border-color:#ff5e62;
+    box-shadow:0 0 5px rgba(255,94,98,0.4);
+}
+
+
+/* ===== Button ===== */
+
+button{
+    width:100%;
+    margin-top:18px;
+    padding:14px;
+    border:none;
+    border-radius:8px;
+    background:#ff5e62;
+    color:white;
+    font-size:15px;
+    font-weight:bold;
+    cursor:pointer;
+    transition:0.2s;
+}
+
+button:hover{
+    background:#e64a50;
+}
+
+
+/* ===== Navigation ===== */
+
+.nav{
+    text-align:center;
+    margin-top:20px;
+}
+
+.nav a{
+    text-decoration:none;
+    color:#ff5e62;
+    font-weight:bold;
+}
+
+.nav a:hover{
+    text-decoration:underline;
+}
+
+
+/* ===== Modal Popup ===== */
+
+.modal{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.5);
+    display:none;
+    align-items:center;
+    justify-content:center;
+}
+
+.modal-content{
+    background:white;
+    padding:40px;
+    border-radius:10px;
+    text-align:center;
+    width:350px;
+    box-shadow:0 5px 20px rgba(0,0,0,0.3);
+}
+
+.modal-content h2{
+    color:#28a745;
+}
+
+.modal-content button{
+    margin-top:20px;
+}
+
+
+/* ===== Responsive ===== */
+
+@media (max-width:500px){
+
+.signup-container{
+    width:90%;
+}
+
+}

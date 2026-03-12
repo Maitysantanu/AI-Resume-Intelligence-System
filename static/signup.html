@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>Signup</title>
+
+<link rel="stylesheet" href="/static/signup.css">
+
+</head>
+
+<body>
+
+<header>Create Account</header>
+
+<div class="signup-container">
+
+<h2>Signup</h2>
+
+<input id="signup_email" type="email" placeholder="Enter Email">
+
+<input id="signup_password" type="password" placeholder="Enter Password">
+
+<select id="signup_role">
+<option value="user">User</option>
+<option value="hr">Admin</option>
+</select>
+
+<button onclick="signup()">Create Account</button>
+
+<div class="nav">
+<a href="/static/login.html">Back to Login</a>
+</div>
+
+</div>
+
+<!-- SUCCESS MODAL -->
+
+<div id="successModal" class="modal">
+
+<div class="modal-content">
+
+<h2>✔ Account Created</h2>
+
+<p>Your account has been created successfully.</p>
+
+<p>You can now login to the portal.</p>
+
+<button onclick="goToLogin()">Go to Login</button>
+
+</div>
+
+</div>
+
+<script src="/static/script.js"></script>
+
+</body>
+
+</html>

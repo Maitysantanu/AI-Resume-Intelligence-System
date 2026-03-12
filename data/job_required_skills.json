@@ -1,0 +1,114 @@
+{
+  "data-scientist": {
+    "required_skills": [
+      "python",
+      "pandas",
+      "numpy",
+      "scikit-learn",
+      "statistics",
+      "machine learning",
+      "data visualization",
+      "sql",
+      "deep learning",
+      "feature engineering"
+    ]
+  },
+  "data-analyst": {
+    "required_skills": [
+      "sql",
+      "excel",
+      "python",
+      "pandas",
+      "data cleaning",
+      "data visualization",
+      "power bi",
+      "tableau",
+      "statistics",
+      "reporting"
+    ]
+  },
+  "frontend-dev": {
+    "required_skills": [
+      "html",
+      "css",
+      "javascript",
+      "react",
+      "bootstrap",
+      "responsive design",
+      "git",
+      "ui/ux",
+      "rest api integration",
+      "webpack"
+    ]
+  },
+  "backend-dev": {
+    "required_skills": [
+      "python",
+      "django",
+      "flask",
+      "node.js",
+      "rest api",
+      "sql",
+      "database design",
+      "docker",
+      "authentication",
+      "system design"
+    ]
+  },
+  "java-dev": {
+    "required_skills": [
+      "java",
+      "oop",
+      "spring boot",
+      "hibernate",
+      "maven",
+      "rest api",
+      "mysql",
+      "junit",
+      "microservices",
+      "git"
+    ]
+  },
+  "cloud-engineer": {
+    "required_skills": [
+      "aws",
+      "docker",
+      "kubernetes",
+      "linux",
+      "ci/cd",
+      "terraform",
+      "networking",
+      "cloud security",
+      "monitoring",
+      "infrastructure as code"
+    ]
+  },
+  "cyber-security": {
+    "required_skills": [
+      "network security",
+      "ethical hacking",
+      "penetration testing",
+      "cryptography",
+      "linux",
+      "siem",
+      "vulnerability assessment",
+      "incident response",
+      "firewalls",
+      "security auditing"
+    ]
+  },
+  "ml-engineer": {
+    "required_skills": [
+      "python",
+      "tensorflow",
+      "pytorch",
+      "machine learning",
+      "deep learning",
+      "data preprocessing",
+      "model deployment",
+      "mlops",
+      "feature engineering",
+      "docker"
+    ]
+  }
+}
