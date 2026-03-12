@@ -1,5 +1,9 @@
 import mysql.connector
-import config
+import os
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 
 # =========================
@@ -7,15 +11,14 @@ import config
 # =========================
 
 def connect_db():
-
-    conn = mysql.connector.connect(
-        host=config.DB_HOST,
-        user=config.DB_USER,
-        password=config.DB_PASSWORD,
-        database=config.DB_NAME
+    connection = mysql.connector.connect(
+        host=os.getenv("DB_HOST"),
+        user=os.getenv("DB_USER"),
+        password=os.getenv("DB_PASSWORD"),
+        database=os.getenv("DB_NAME"),
+        port=int(os.getenv("DB_PORT", 3306))
     )
-
-    return conn
+    return connection
 
 
 # =========================
@@ -25,7 +28,6 @@ def connect_db():
 def insert_candidate(name, email, resume_text):
 
     conn = connect_db()
-
     cursor = conn.cursor()
 
     query = """
@@ -48,7 +50,6 @@ def insert_candidate(name, email, resume_text):
 def fetch_resumes():
 
     conn = connect_db()
-
     cursor = conn.cursor(dictionary=True)
 
     query = "SELECT id,name,email,resume_text FROM candidates"
@@ -67,14 +68,9 @@ def fetch_resumes():
 # USER AUTHENTICATION FUNCTIONS
 # ======================================================
 
-# --------------------------
-# CREATE USER
-# --------------------------
-
 def create_user(email, password_hash):
 
     conn = connect_db()
-
     cursor = conn.cursor()
 
     query = """
@@ -90,14 +86,9 @@ def create_user(email, password_hash):
     conn.close()
 
 
-# --------------------------
-# GET USER
-# --------------------------
-
 def get_user(email):
 
     conn = connect_db()
-
     cursor = conn.cursor(dictionary=True)
 
     query = "SELECT * FROM users WHERE email=%s"
@@ -116,14 +107,9 @@ def get_user(email):
 # HR AUTHENTICATION FUNCTIONS
 # ======================================================
 
-# --------------------------
-# CREATE HR
-# --------------------------
-
 def create_hr(email, password_hash):
 
     conn = connect_db()
-
     cursor = conn.cursor()
 
     query = """
@@ -139,14 +125,9 @@ def create_hr(email, password_hash):
     conn.close()
 
 
-# --------------------------
-# GET HR
-# --------------------------
-
 def get_hr(email):
 
     conn = connect_db()
-
     cursor = conn.cursor(dictionary=True)
 
     query = "SELECT * FROM hr_admins WHERE email=%s"

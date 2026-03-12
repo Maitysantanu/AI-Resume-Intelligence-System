@@ -228,19 +228,40 @@ try{
 let res = await fetch(API + "/predict-role/");
 let data = await res.json();
 
-if(res.ok){
-document.getElementById("result").innerText = data.result;
+if(res.ok && !data.error){
+
+let output = "";
+
+output += "Name: " + (data.name || "Unknown") + "\n";
+output += "Email: " + (data.email || "Unknown") + "\n\n";
+
+output += "Best Predicted Role: " + data.best_role + "\n\n";
+
+output += "Top Roles:\n";
+
+data.predicted_roles.forEach(role=>{
+    output += role.role + " - " + role.score + "%\n";
+});
+
+output += "\nMissing Skills:\n";
+output += data.missing_skills.join(", ");
+
+document.getElementById("result").innerText = output;
+
 }else{
-document.getElementById("result").innerText = data.error;
+
+document.getElementById("result").innerText = data.error || "Prediction failed";
+
 }
 
 }catch(error){
+
 console.error(error);
 alert("Server error");
-}
 
 }
 
+}
 
 /* =========================
 ATS SCORE

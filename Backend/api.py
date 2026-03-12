@@ -127,8 +127,18 @@ async def predict_role():
         text=True
     )
 
-    return {"result": process.stdout}
+    if process.stderr:
+        return {"error": process.stderr}
 
+    try:
+        result = json.loads(process.stdout)
+        return result
+    except Exception:
+        return {
+            "error": "Invalid JSON from model",
+            "stdout": process.stdout,
+            "stderr": process.stderr
+        }
 
 # -----------------------------
 # ATS Score

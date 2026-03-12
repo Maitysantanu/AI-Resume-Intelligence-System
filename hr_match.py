@@ -1,20 +1,26 @@
 import sys
 import json
 import numpy as np
+import config
 
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
-from sentence_transformers import SentenceTransformer
 
-import config
+from sentence_transformers import SentenceTransformer
+from sentence_transformers import util
 
 from database.mysql_db import fetch_resumes
 from utils.skill_extractor import load_all_skills, extract_skills, skill_overlap_score
 
 
-embedding_model = SentenceTransformer("all-MiniLM-L6-v2")
 # ----------------------------
-# RECEIVE JD FROM BACKEND (stdin)
+# LOAD EMBEDDING MODEL
+# ----------------------------
+model = SentenceTransformer("all-mpnet-base-v2")
+
+
+# ----------------------------
+# RECEIVE JD FROM BACKEND
 # ----------------------------
 job_description = sys.stdin.read().strip().encode("utf-8", "ignore").decode("utf-8")
 
@@ -47,8 +53,7 @@ if len(resumes) == 0:
     print("No resumes found in database")
     sys.exit()
 
-
-resume_texts = [r["resume_text"] for r in resumes]
+resume_texts = [r["resume_text"] or "" for r in resumes]
 
 
 # ----------------------------
@@ -57,9 +62,10 @@ resume_texts = [r["resume_text"] for r in resumes]
 corpus = resume_texts + [job_description]
 
 vectorizer = TfidfVectorizer(
-    ngram_range=(1,2),
+    ngram_range=(1, 2),
     stop_words="english",
     max_df=0.85,
+    min_df=2,
     sublinear_tf=True
 )
 
@@ -74,17 +80,22 @@ tfidf_scores = cosine_similarity(jd_vector, resume_vectors)
 # ----------------------------
 # SEMANTIC SIMILARITY
 # ----------------------------
+resume_embeddings = model.encode(
+    resume_texts,
+    batch_size=32,
+    convert_to_numpy=True
+)
 
+jd_embedding = model.encode(
+    [job_description],
+    convert_to_numpy=True
+)
 
-resume_embeddings = embedding_model.encode(resume_texts)
-
-jd_embedding = embedding_model.encode([job_description])
-
-semantic_scores = cosine_similarity(jd_embedding, resume_embeddings)
+semantic_scores = util.cos_sim(jd_embedding, resume_embeddings).cpu().numpy()
 
 
 # ----------------------------
-# FINAL SCORE
+# FINAL SCORING
 # ----------------------------
 final_scores = []
 
@@ -98,9 +109,9 @@ for i in range(len(resumes)):
     semantic_score = semantic_scores[0][i]
 
     final_score = (
-        0.4 * tfidf_score +
+        0.3 * tfidf_score +
         0.4 * semantic_score +
-        0.2 * overlap
+        0.3 * overlap
     )
 
     final_scores.append(final_score)
@@ -109,12 +120,13 @@ for i in range(len(resumes)):
 # ----------------------------
 # TOP MATCHING CANDIDATES
 # ----------------------------
-top_indices = np.argsort(final_scores)[::-1][:3]
+top_k = min(3, len(final_scores))
+top_indices = np.argsort(final_scores)[::-1][:top_k]
 
 
-
-
-
+# ----------------------------
+# FORMAT OUTPUT
+# ----------------------------
 results = []
 
 for idx in top_indices:
@@ -126,5 +138,6 @@ for idx in top_indices:
         "email": candidate["email"],
         "score": score
     })
+
 
 print(json.dumps(results))
