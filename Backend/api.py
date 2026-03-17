@@ -54,10 +54,16 @@ CURRENT_RESUME_PATH = None
 # -----------------------------
 # Landing Page
 # -----------------------------
+# Landing page
 @app.get("/")
 def home():
-    return FileResponse(os.path.join(STATIC_FOLDER, "login.html"))
+    return FileResponse(os.path.join(STATIC_FOLDER, "landing.html"))
 
+
+# Login page
+@app.get("/login")
+def login_page():
+    return FileResponse(os.path.join(STATIC_FOLDER, "login.html"))
 
 
 
@@ -164,21 +170,44 @@ async def ats_score():
 @app.post("/jd-match/")
 async def jd_match(jd: str = Form(...)):
 
-    process = subprocess.Popen(
-        [sys.executable, JD_SCRIPT],
-        stdin=subprocess.PIPE,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        text=True,
-        encoding="utf-8"
-    )
+    try:
+        process = subprocess.Popen(
+            [sys.executable, JD_SCRIPT],
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            encoding="utf-8"
+        )
 
-    output, error = process.communicate(jd)
+        output, error = process.communicate(jd)
 
-    if error:
-        return {"error": error}
+        # 🔍 Check return code
+        if process.returncode != 0:
+            return {
+                "error": "Script execution failed",
+                "details": error.strip()
+            }
 
-    return {"candidates": json.loads(output)}
+        # 🔍 Clean output
+        output = output.strip()
+
+        if not output:
+            return {"error": "Empty response from matching engine"}
+
+        # 🔍 Parse JSON safely
+        try:
+            candidates = json.loads(output)
+        except json.JSONDecodeError:
+            return {
+                "error": "Invalid JSON from matching engine",
+                "raw_output": output
+            }
+
+        return {"candidates": candidates}
+
+    except Exception as e:
+        return {"error": str(e)}
 
 # =====================================================
 # USER AUTHENTICATION

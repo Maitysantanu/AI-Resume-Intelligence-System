@@ -1,106 +1,222 @@
-/* ===== Page Background ===== */
+
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+
+
+
+:root{
+
+    --primary:#4F46E5;
+    --primary-light:#6366F1;
+
+    --background:#0F172A;
+    --card:#111827;
+
+    --text:#F1F5F9;
+    --text-light:#94A3B8;
+
+    --border:#1F2937;
+
+    --shadow:0 15px 40px rgba(0,0,0,0.5);
+}
+
+
 
 body{
-    font-family: Arial, Helvetica, sans-serif;
-    background: linear-gradient(135deg,#141e30,#243b55);
-    margin:0;
-    min-height:100vh;
+    font-family:Inter, Segoe UI, sans-serif;
+
+    background:linear-gradient(135deg,#0F172A,#020617);
+
     display:flex;
-    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+
+    min-height:100vh;
+
+    padding:80px 20px 20px; 
+
+    color:var(--text);
 }
 
 
-/* ===== Header ===== */
 
 header{
-    background:#0f2027;
-    color:white;
-    padding:20px;
+
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+
+    padding:18px;
+
     text-align:center;
-    font-size:24px;
-    font-weight:bold;
-    box-shadow:0 4px 10px rgba(0,0,0,0.25);
+
+    font-size:20px;
+    font-weight:600;
+
+    border-bottom:1px solid var(--border);
+
+    background:rgba(15,23,42,0.6);
+    backdrop-filter:blur(10px);
+
+    letter-spacing:0.5px;
+
+    background:linear-gradient(90deg,#6366F1,#22C55E);
+    -webkit-background-clip:text;
+    color:transparent;
+
 }
 
 
-/* ===== Login Container ===== */
+
 
 .login-container{
-    width:380px;
-    margin:70px auto;
-    background:white;
-    padding:35px;
-    border-radius:12px;
-    box-shadow:0 10px 30px rgba(0,0,0,0.3);
+
+    width:100%;
+    max-width:400px;
+
+    padding:40px;
+
+    border-radius:16px;
+
+    border:1px solid var(--border);
+
+    background:rgba(17,24,39,0.85);
+    backdrop-filter:blur(12px);
+
+    box-shadow:var(--shadow);
+
+    transition:0.3s;
+
+}
+
+.login-container:hover{
+    transform:translateY(-4px);
 }
 
 
-/* ===== Title ===== */
+
 
 .login-container h2{
+
     text-align:center;
-    margin-bottom:25px;
-    color:#333;
+    margin-bottom:20px;
+
+    font-weight:600;
+    font-size:22px;
+
 }
 
 
-/* ===== Inputs ===== */
 
-input,select{
+
+input,
+select{
+
     width:100%;
-    padding:12px;
+
+    padding:13px;
+
     margin-top:12px;
-    border:1px solid #ccc;
+
+    border:1px solid var(--border);
+
     border-radius:8px;
+
     font-size:14px;
+
+    background:#020617;
+    color:var(--text);
+
+    transition:0.2s;
+
 }
 
 
-/* ===== Focus Effect ===== */
 
-input:focus,select:focus{
+input::placeholder{
+    color:#64748B;
+}
+
+
+
+
+input:focus,
+select:focus{
+
     outline:none;
-    border-color:#3f51b5;
-    box-shadow:0 0 5px rgba(63,81,181,0.4);
+
+    border-color:var(--primary-light);
+
+    box-shadow:0 0 10px rgba(99,102,241,0.4);
+
 }
 
 
-/* ===== Login Button ===== */
+
 
 button{
+
     width:100%;
+
     margin-top:18px;
+
     padding:14px;
+
     border:none;
-    border-radius:8px;
-    background:#3f51b5;
+
+    border-radius:10px;
+
+    background:linear-gradient(135deg,#6366F1,#4F46E5);
+
     color:white;
+
     font-size:15px;
-    font-weight:bold;
+    font-weight:600;
+
     cursor:pointer;
-    transition:0.2s;
+
+    transition:0.25s;
+
 }
 
 button:hover{
-    background:#303f9f;
+
+    transform:translateY(-2px);
+
+    box-shadow:0 8px 20px rgba(79,70,229,0.5);
+
 }
 
 
-/* ===== Navigation ===== */
+
 
 .nav{
+
     text-align:center;
-    margin-top:20px;
+
+    margin-top:22px;
+
 }
 
 .nav p{
-    margin-bottom:5px;
+    margin-bottom:6px;
+    color:var(--text-light);
 }
 
 .nav a{
-    color:#3f51b5;
+
+    color:#6366F1;
+
     text-decoration:none;
-    font-weight:bold;
+
+    font-weight:500;
+
 }
 
 .nav a:hover{
@@ -108,19 +224,19 @@ button:hover{
 }
 
 
-/* ===== Admin Key Box ===== */
+
 
 #admin_key_login_box{
-    margin-top:10px;
+    margin-top:12px;
 }
 
 
-/* ===== Responsive ===== */
+
 
 @media (max-width:500px){
 
-.login-container{
-    width:90%;
-}
+    .login-container{
+        padding:30px;
+    }
 
 }

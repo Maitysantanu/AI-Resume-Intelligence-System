@@ -1,160 +1,181 @@
-/* ===== Global Styling ===== */
+:root{
+
+--primary:#2563EB;
+--primary-hover:#1D4ED8;
+
+--background:#F8FAFC;
+--card:#FFFFFF;
+
+--text:#1E293B;
+--border:#E2E8F0;
+
+}
 
 body{
-    font-family: Arial, Helvetica, sans-serif;
-    background: linear-gradient(135deg,#007bff,#4facfe);
-    margin:0;
-    min-height:100vh;
+
+margin:0;
+font-family:Segoe UI, Arial;
+background:var(--background);
+color:var(--text);
+
+display:flex;
+flex-direction:column;
+min-height:100vh;
+
 }
 
 
-/* ===== Header ===== */
+/* HEADER */
 
 header{
-    background:#007bff;
-    color:white;
-    padding:15px;
-    text-align:center;
-    font-size:22px;
-    font-weight:bold;
-    box-shadow:0 2px 6px rgba(0,0,0,0.2);
+
+background:white;
+
+padding:20px;
+
+text-align:center;
+
+font-size:22px;
+font-weight:600;
+
+border-bottom:1px solid var(--border);
+
 }
 
 
-/* ===== Containers ===== */
+/* SIGNUP CONTAINER */
 
-.container{
-    width:420px;
-    margin:60px auto;
-    background:white;
-    padding:30px;
-    border-radius:10px;
-    box-shadow:0 8px 25px rgba(0,0,0,0.2);
-    transition:0.3s;
+.signup-container{
+
+width:380px;
+
+margin:80px auto;
+
+background:var(--card);
+
+padding:40px;
+
+border-radius:10px;
+
+border:1px solid var(--border);
+
+box-shadow:0 10px 25px rgba(0,0,0,0.05);
+
 }
 
-.container:hover{
-    transform:translateY(-3px);
-}
+.signup-container h2{
 
+text-align:center;
 
-/* ===== Form Inputs ===== */
+margin-bottom:25px;
 
-input,select,textarea{
-    width:100%;
-    padding:12px;
-    margin-top:12px;
-    border:1px solid #ccc;
-    border-radius:6px;
-    font-size:14px;
-    transition:0.2s;
-}
-
-input:focus,
-select:focus,
-textarea:focus{
-    outline:none;
-    border-color:#007bff;
-    box-shadow:0 0 4px rgba(0,123,255,0.4);
 }
 
 
-/* ===== Buttons ===== */
+/* INPUTS */
+
+input, select{
+
+width:100%;
+
+padding:12px;
+
+margin-top:12px;
+
+border:1px solid var(--border);
+
+border-radius:6px;
+
+font-size:14px;
+
+box-sizing:border-box;
+
+}
+
+
+/* INPUT FOCUS */
+
+input:focus, select:focus{
+
+outline:none;
+
+border-color:var(--primary);
+
+box-shadow:0 0 4px rgba(37,99,235,0.3);
+
+}
+
+
+/* BUTTON */
 
 button{
-    width:100%;
-    margin-top:18px;
-    padding:12px;
-    background:#007bff;
-    border:none;
-    color:white;
-    border-radius:6px;
-    font-size:15px;
-    font-weight:bold;
-    cursor:pointer;
-    transition:0.2s;
+
+width:100%;
+
+margin-top:18px;
+
+padding:12px;
+
+background:var(--primary);
+
+color:white;
+
+border:none;
+
+border-radius:6px;
+
+font-size:15px;
+
+font-weight:600;
+
+cursor:pointer;
+
 }
 
 button:hover{
-    background:#0056b3;
+
+background:var(--primary-hover);
+
 }
 
 
-/* ===== Result Box ===== */
-
-.result{
-    margin-top:20px;
-    background:#f7f7f7;
-    padding:15px;
-    border-radius:6px;
-    white-space:pre-wrap;
-    border-left:4px solid #007bff;
-}
-
-
-/* ===== Navigation Links ===== */
+/* NAV */
 
 .nav{
-    text-align:center;
-    margin-top:20px;
+
+text-align:center;
+
+margin-top:20px;
+
 }
 
 .nav a{
-    margin:10px;
-    text-decoration:none;
-    color:#007bff;
-    font-weight:bold;
+
+color:var(--primary);
+
+text-decoration:none;
+
+font-weight:500;
+
 }
 
 .nav a:hover{
-    text-decoration:underline;
+
+text-decoration:underline;
+
 }
 
 
-/* ===== Auth UI (Login / Signup) ===== */
-
-.auth-container{
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    min-height:100vh;
-}
-
-.auth-card{
-    background:white;
-    padding:35px;
-    width:350px;
-    border-radius:10px;
-    box-shadow:0 10px 30px rgba(0,0,0,0.2);
-}
-
-.auth-card h2{
-    text-align:center;
-    margin-bottom:20px;
-}
-
-
-/* ===== Dashboard Layout ===== */
-
-
-
-.dashboard h2{
-    text-align:center;
-    margin-bottom:20px;
-}
-
-/* MODAL POPUP */
+/* SUCCESS MODAL */
 
 .modal{
 
 position:fixed;
 
 top:0;
-
 left:0;
 
 width:100%;
-
 height:100%;
 
 background:rgba(0,0,0,0.5);
@@ -162,10 +183,9 @@ background:rgba(0,0,0,0.5);
 display:none;
 
 align-items:center;
-
 justify-content:center;
 
-z-index:999;
+z-index:1000;
 
 }
 
@@ -181,15 +201,13 @@ text-align:center;
 
 width:350px;
 
-box-shadow:0 5px 20px rgba(0,0,0,0.3);
+box-shadow:0 10px 25px rgba(0,0,0,0.2);
 
 }
 
 .modal-content h2{
 
-color:#28a745;
-
-margin-bottom:10px;
+color:#22c55e;
 
 }
 
@@ -197,150 +215,19 @@ margin-bottom:10px;
 
 margin-top:20px;
 
-padding:10px 20px;
-
-background:#007bff;
-
-border:none;
-
-color:white;
-
-border-radius:6px;
-
-cursor:pointer;
-
-}
-
-.modal-content button:hover{
-
-background:#0056b3;
-
 }
 
 
-/* ===== Responsive ===== */
+/* RESPONSIVE */
 
-@media (max-width:600px){
+@media (max-width:500px){
 
-.container,
-.dashboard,
-.auth-card{
-    width:90%;
+.signup-container{
+
+width:90%;
+
+margin:50px auto;
+
 }
 
 }
-
-.candidate-card{
-background:white;
-padding:18px;
-margin:15px 0;
-border-radius:10px;
-box-shadow:0 4px 12px rgba(0,0,0,0.12);
-transition:0.2s;
-}
-
-.candidate-card:hover{
-transform:translateY(-3px);
-}
-
-.score-bar{
-width:100%;
-height:18px;
-background:#eee;
-border-radius:10px;
-margin-top:10px;
-overflow:hidden;
-}
-
-.score-fill{
-height:100%;
-background:linear-gradient(90deg,#4caf50,#8bc34a);
-border-radius:10px;
-transition:width 0.4s ease;
-}
-
-.low-score{
-background:#ff4e50;
-}
-
-.mid-score{
-background:#f9a825;
-}
-
-.high-score{
-background:#4caf50;
-}
-
-/* ATS Dashboard */
-
-.ats-container{
-margin-top:20px;
-}
-
-/* ATS Score Meter */
-
-.ats-meter{
-width:100%;
-height:40px;
-background:#eee;
-border-radius:25px;
-overflow:hidden;
-margin-bottom:25px;
-box-shadow:inset 0 2px 5px rgba(0,0,0,0.15);
-}
-
-.ats-fill{
-height:100%;
-display:flex;
-align-items:center;
-justify-content:center;
-color:white;
-font-weight:bold;
-font-size:16px;
-border-radius:25px;
-background:linear-gradient(90deg,#ff4e50,#f9d423);
-transition:width 0.5s ease;
-}
-
-.ats-grid{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-gap:15px;
-}
-
-.ats-card{
-background:white;
-padding:18px;
-border-radius:10px;
-box-shadow:0 4px 12px rgba(0,0,0,0.1);
-border-left:4px solid #007bff;
-}
-
-.ats-card h3{
-margin-top:0;
-color:#333;
-}
-
-pre{
-white-space:pre-wrap;
-font-family:Arial;
-}
-
-.ats-card ul{
-padding-left:18px;
-margin:0;
-}
-
-.ats-card li{
-margin-bottom:6px;
-}
-
-h2{
-margin-bottom:20px;
-}
-
-h3{
-color:#007bff;
-margin-bottom:10px;
-}
-

@@ -2,58 +2,59 @@
 <html>
 
 <head>
-
-<title>Signup</title>
-
-<link rel="stylesheet" href="/static/signup.css">
-
+    <title>Signup</title>
+    <link rel="stylesheet" href="/static/signup.css">
 </head>
 
 <body>
 
 <header>Create Account</header>
 
-<div class="signup-container">
+<div class="page">
 
-<h2>Signup</h2>
+    <div class="signup-container">
 
-<input id="signup_email" type="email" placeholder="Enter Email">
+        <h2>Signup</h2>
 
-<input id="signup_password" type="password" placeholder="Enter Password">
+        <input id="signup_email" type="email" placeholder="Enter Email">
 
-<select id="signup_role">
-<option value="user">User</option>
-<option value="hr">Admin</option>
-</select>
+        <input id="signup_password" type="password" placeholder="Enter Password">
 
-<button onclick="signup()">Create Account</button>
+        <select id="signup_role">
+            <option value="user">User</option>
+            <option value="hr">Admin</option>
+        </select>
 
-<div class="nav">
-<a href="/static/login.html">Back to Login</a>
+        <button onclick="signup()">Create Account</button>
+
+        <div class="nav">
+            <a href="/static/login.html">Back to Login</a>
+        </div>
+
+    </div>
+
 </div>
 
-</div>
 
 <!-- SUCCESS MODAL -->
 
 <div id="successModal" class="modal">
 
-<div class="modal-content">
+    <div class="modal-content">
 
-<h2>✔ Account Created</h2>
+        <h2>✔ Account Created</h2>
 
-<p>Your account has been created successfully.</p>
+        <p>Your account has been created successfully.</p>
 
-<p>You can now login to the portal.</p>
+        <p>You can now login to the portal.</p>
 
-<button onclick="goToLogin()">Go to Login</button>
+        <button onclick="goToLogin()">Go to Login</button>
 
-</div>
+    </div>
 
 </div>
 
 <script src="/static/script.js"></script>
 
 </body>
-
 </html>

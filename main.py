@@ -143,8 +143,8 @@ for i in range(len(df)):
 
     final_score = (
         0.4 * tfidf_score +
-        0.4 * semantic_score +
-        0.2 * overlap
+        0.3 * semantic_score +
+        0.3 * overlap
     )
 
     final_scores.append(final_score)

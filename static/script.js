@@ -1,3 +1,4 @@
+
 const API = "http://127.0.0.1:8000";
 
 /* =========================
@@ -9,11 +10,7 @@ function toggleAdminKeyLogin(){
 let role = document.getElementById("login_role").value;
 let box = document.getElementById("admin_key_login_box");
 
-if(role === "hr"){
-box.style.display="block";
-}else{
-box.style.display="none";
-}
+box.style.display = (role === "hr") ? "block" : "none";
 
 }
 
@@ -128,19 +125,13 @@ body:form
 let data = await res.json();
 
 if(res.ok && data.role === "user"){
-
 window.location.href="/static/dashboard_user.html";
-
 }
 else if(res.ok && data.role === "hr"){
-
 window.location.href="/static/dashboard_hr.html";
-
 }
 else{
-
 alert(data.error || data.detail || "Login failed");
-
 }
 
 }catch(error){
@@ -152,70 +143,6 @@ alert("Server error");
 
 }
 
-
-/* =========================
-HR MATCH JOB DESCRIPTION
-========================= */
-
-async function matchJD(){
-
-let jd = document.getElementById("jd").value.trim();
-
-if(!jd){
-alert("Please enter job description");
-return;
-}
-
-let formData = new FormData();
-formData.append("jd", jd);
-
-try{
-
-let res = await fetch(API + "/jd-match/",{
-method:"POST",
-body:formData
-});
-
-let data = await res.json();
-
-let container = document.getElementById("result");
-container.innerHTML="";
-
-if(res.ok && data.candidates){
-
-data.candidates.forEach((c,index)=>{
-
-container.innerHTML += `
-<div class="candidate-card">
-<h3>#${index+1} ${c.name}</h3>
-<p><b>Email:</b> ${c.email}</p>
-
-<div class="score-bar">
-<div class="score-fill" style="width:${c.score}%"></div>
-</div>
-
-<p><b>Match Score:</b> ${c.score}%</p>
-
-</div>
-`;
-
-});
-
-}
-else{
-
-container.innerText = data.error || "No candidates found";
-
-}
-
-}catch(error){
-
-console.error(error);
-alert("Server error while matching resumes");
-
-}
-
-}
 
 /* =========================
 PREDICT JOB ROLE
@@ -240,7 +167,7 @@ output += "Best Predicted Role: " + data.best_role + "\n\n";
 output += "Top Roles:\n";
 
 data.predicted_roles.forEach(role=>{
-    output += role.role + " - " + role.score + "%\n";
+output += role.role + " - " + role.score + "%\n";
 });
 
 output += "\nMissing Skills:\n";
@@ -263,13 +190,11 @@ alert("Server error");
 
 }
 
-/* =========================
-ATS SCORE
-========================= */
 
 /* =========================
 ATS SCORE ANALYSIS
 ========================= */
+
 async function atsScore(){
 
 try{
@@ -285,17 +210,13 @@ return;
 let text = data.result;
 
 
-/* ---------------------------
-Extract ATS Score
---------------------------- */
+/* Extract ATS score */
 
 let scoreMatch = text.match(/ATS_SCORE:\s*(\d+)/i);
 let score = scoreMatch ? parseInt(scoreMatch[1]) : 0;
 
 
-/* ---------------------------
-Extract Sections
---------------------------- */
+/* Extract sections */
 
 function extractSection(title){
 
@@ -312,42 +233,28 @@ let strengths = extractSection("STRENGTHS:");
 let weaknesses = extractSection("WEAKNESSES:");
 let formatting = extractSection("FORMATTING_FEEDBACK:");
 let suggestions = extractSection("RESUME_IMPROVEMENT_SUGGESTIONS:");
-let rewrite = extractSection("REWRITTEN_BULLET_POINTS:");
+let rewrite = extractSection("REWRITTEN_BULLET_POINTS");
 
 
-
-/* ---------------------------
-Format bullet lists
---------------------------- */
+/* Format list */
 
 function formatList(text){
 
 let items = text.split("\n").filter(x=>x.trim()!="");
-
 return items.map(i=>`<li>${i.replace(/^[-•]/,"")}</li>`).join("");
 
 }
 
 
-
-/* ---------------------------
-Score Color
---------------------------- */
+/* Score color */
 
 let scoreClass = "low-score";
 
-if(score >= 75){
-scoreClass = "high-score";
-}
-else if(score >= 50){
-scoreClass = "mid-score";
-}
+if(score >= 75) scoreClass = "high-score";
+else if(score >= 50) scoreClass = "mid-score";
 
 
-
-/* ---------------------------
-Render UI
---------------------------- */
+/* Render UI */
 
 document.getElementById("result").innerHTML = `
 
@@ -356,9 +263,12 @@ document.getElementById("result").innerHTML = `
 <h2>ATS Resume Analysis</h2>
 
 <div class="ats-meter">
-<div class="ats-fill ${scoreClass}" style="width:${score}%">${score}%</div>
+<div class="ats-fill ${scoreClass}" style="width:${score}%"></div>
 </div>
 
+<div class="ats-score-text">
+${score}% ATS Match
+</div>
 
 <div class="ats-grid">
 
@@ -411,6 +321,8 @@ alert("Server error");
 }
 
 }
+
+
 /* =========================
 UPLOAD RESUME
 ========================= */
@@ -440,7 +352,7 @@ let data = await res.json();
 if(res.ok){
 
 document.getElementById("result").innerHTML =
-`<p style="color:green;font-weight:bold;">${data.message}</p>`;
+`<p style="color:lightgreen;font-weight:bold;">${data.message}</p>`;
 
 }
 else{
@@ -457,4 +369,108 @@ alert("Server error while uploading resume");
 
 }
 
+}
+
+/* =========================
+HR MATCH JOB DESCRIPTION
+========================= */
+
+async function matchJD(){
+
+let jd = document.getElementById("jd").value.trim();
+
+if(!jd){
+alert("Please enter job description");
+return;
+}
+
+let formData = new FormData();
+formData.append("jd", jd);
+
+try{
+
+let res = await fetch(API + "/jd-match/",{
+method:"POST",
+body:formData
+});
+
+let data = await res.json();
+
+let container = document.getElementById("result");
+container.innerHTML = "";
+
+/* Error handling */
+
+if(!res.ok){
+container.innerText = data.error || "Matching failed";
+return;
+}
+
+/* If candidates exist */
+
+if(data.candidates && data.candidates.length > 0){
+
+let total = data.candidates.length;
+let sum = 0;
+let top = 0;
+
+/* Render cards */
+
+data.candidates.forEach((c, index)=>{
+
+sum += c.score;
+if(c.score > top) top = c.score;
+
+/* Score color */
+
+let colorClass = "low-score";
+if(c.score >= 75) colorClass = "high-score";
+else if(c.score >= 50) colorClass = "mid-score";
+
+/* Render */
+
+container.innerHTML += `
+<div class="candidate-card">
+
+<h3>#${index + 1} ${c.name}</h3>
+
+<p><b>Email:</b> ${c.email}</p>
+
+<div class="score-bar">
+<div class="score-fill ${colorClass}" style="width:${c.score}%"></div>
+</div>
+
+<p><b>Match Score:</b> ${c.score}%</p>
+
+</div>
+`;
+
+});
+
+/* ===== UPDATE DASHBOARD STATS ===== */
+
+let avg = (sum / total).toFixed(1);
+
+document.getElementById("totalCount").innerText = total;
+document.getElementById("avgScore").innerText = avg + "%";
+document.getElementById("topScore").innerText = top + "%";
+
+}else{
+
+container.innerText = "No matching candidates found";
+
+/* Reset stats */
+
+document.getElementById("totalCount").innerText = 0;
+document.getElementById("avgScore").innerText = "0%";
+document.getElementById("topScore").innerText = "0%";
+
+}
+
+}catch(error){
+
+console.error(error);
+alert("Server error while matching resumes");
+
+}
 }
