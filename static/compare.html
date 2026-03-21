@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>ATS Improvement Dashboard</title>
+<link rel="stylesheet" href="/static/compare.css">
+</head>
+
+<body>
+
+<header>ATS Improvement Dashboard</header>
+
+<div class="container">
+
+    <h2>Upload Your Improved Resume</h2>
+    <p class="subtitle">After applying the suggestions, upload your updated resume to see how your ATS score improved.</p>
+
+    <div class="upload-box">
+        <input type="file" id="improved_resume" accept=".pdf">
+        <button onclick="uploadAndCompare()">Analyze Improvement</button>
+    </div>
+
+    <div id="loading" style="display:none;" class="loading">
+        ⏳ Analyzing your improved resume...
+    </div>
+
+    <div id="compare_result"></div>
+
+</div>
+
+<script src="/static/script.js"></script>
+
+</body>
+</html>

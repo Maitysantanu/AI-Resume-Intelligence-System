@@ -125,7 +125,8 @@ Resume:
     # -----------------------------
     result = response.choices[0].message.content.strip()
 
-    print(result)
+    sys.stdout.buffer.write(result.encode("utf-8"))
+    sys.stdout.buffer.flush()
 
 
 except Exception as e:

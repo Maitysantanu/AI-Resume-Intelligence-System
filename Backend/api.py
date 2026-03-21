@@ -42,12 +42,50 @@ JD_SCRIPT = os.path.join(BASE_DIR, "hr_match.py")
 RESUME_FOLDER = os.path.join(BASE_DIR, "resumefile")
 STATIC_FOLDER = os.path.join(BASE_DIR, "static")
 
+# Persistent resume path tracker
+RESUME_TRACKER = os.path.join(BASE_DIR, "current_resume.txt")
+
+# -----------------------------
+# Serve static files
+# -----------------------------
+
+# ADD COMPARE ROUTE BEFORE THE MOUNT ↓
+@app.get("/compare")
+def compare_page():
+    return FileResponse(os.path.join(STATIC_FOLDER, "compare.html"))
+
+
 # Serve static file
 app.mount("/static", StaticFiles(directory=STATIC_FOLDER), name="static")
 
-CURRENT_RESUME_PATH = None
+
+@app.get("/debug")
+def debug():
+    return {
+        "BASE_DIR": BASE_DIR,
+        "RESUME_FOLDER": RESUME_FOLDER,
+        "RESUME_TRACKER": RESUME_TRACKER,
+        "tracker_exists": os.path.exists(RESUME_TRACKER),
+        "tracker_content": open(RESUME_TRACKER).read() if os.path.exists(RESUME_TRACKER) else "not found"
+    }
 
 
+# -----------------------------
+# Helper: Get current resume path
+# -----------------------------
+def get_current_resume():
+    if not os.path.exists(RESUME_TRACKER):
+        return None
+    with open(RESUME_TRACKER, "r") as f:
+        path = f.read().strip()
+    if not os.path.exists(path):
+        return None
+    return path
+
+
+# -----------------------------
+# Landing Page
+# -----------------------------
 # Landing page
 @app.get("/")
 def home():
@@ -58,8 +96,6 @@ def home():
 @app.get("/login")
 def login_page():
     return FileResponse(os.path.join(STATIC_FOLDER, "login.html"))
-
-
 
 
 @app.get("/signup")
@@ -83,8 +119,6 @@ def dashboard_hr():
 @app.post("/upload-resume/")
 async def upload_resume(file: UploadFile = File(...)):
 
-    global CURRENT_RESUME_PATH
-
     # Validate file type
     if not file.filename.lower().endswith(".pdf"):
         raise HTTPException(status_code=400, detail="Only PDF files are allowed")
@@ -99,32 +133,38 @@ async def upload_resume(file: UploadFile = File(...)):
 
     # Generate safe random filename
     safe_filename = f"{uuid.uuid4()}.pdf"
-
     save_path = os.path.join(RESUME_FOLDER, safe_filename)
 
     # Save file
     with open(save_path, "wb") as f:
         f.write(contents)
 
-    CURRENT_RESUME_PATH = save_path
+    # Persist resume path so it survives server restarts
+    with open(RESUME_TRACKER, "w") as f:
+        f.write(save_path)
 
     return {
         "message": "Resume uploaded successfully",
         "filename": safe_filename
     }
 
+
+# -----------------------------
 # Predict Job Role
 
 @app.get("/predict-role/")
 async def predict_role():
 
-    if CURRENT_RESUME_PATH is None:
+    resume_path = get_current_resume()
+
+    if resume_path is None:
         return {"error": "Please upload a resume first"}
 
     process = subprocess.run(
-        [sys.executable, ROLE_SCRIPT, CURRENT_RESUME_PATH],
+        [sys.executable, ROLE_SCRIPT, resume_path],
         capture_output=True,
-        text=True
+        text=True,
+        encoding="utf-8"
     )
 
     if process.stderr:
@@ -141,21 +181,47 @@ async def predict_role():
         }
 
 
+# -----------------------------
 # ATS Score
 
 @app.get("/ats-score/")
 async def ats_score():
 
-    if CURRENT_RESUME_PATH is None:
+    resume_path = get_current_resume()
+
+    if resume_path is None:
         return {"error": "Please upload a resume first"}
 
     process = subprocess.run(
-        [sys.executable, ATS_SCRIPT, CURRENT_RESUME_PATH],
+        [sys.executable, ATS_SCRIPT, resume_path],
         capture_output=True,
-        text=True
+        text=True,
+        encoding="utf-8"
     )
 
-    return {"result": process.stdout}
+    output = process.stdout.strip()
+
+    # Extract ATS score from output
+    score = 0
+    lines = output.splitlines()
+    for i, line in enumerate(lines):
+        # Match "ATS_SCORE: 85" on same line
+        match = re.search(r"ATS_SCORE\s*:\s*(\d+)", line, re.IGNORECASE)
+        if match:
+            score = int(match.group(1))
+            break
+        # Match "ATS_SCORE:" on one line, number on next line
+        if "ATS_SCORE" in line.upper() and i + 1 < len(lines):
+            next_line = lines[i + 1].strip()
+            if next_line.isdigit():
+                score = int(next_line)
+                break
+
+    return {
+        "score": score,
+        "result": output,
+        "stderr": process.stderr  # keep for debugging, remove later
+    }
 
 
 
@@ -176,20 +242,17 @@ async def jd_match(jd: str = Form(...)):
 
         output, error = process.communicate(jd)
 
-        # 🔍 Check return code
         if process.returncode != 0:
             return {
                 "error": "Script execution failed",
                 "details": error.strip()
             }
 
-        # 🔍 Clean output
         output = output.strip()
 
         if not output:
             return {"error": "Empty response from matching engine"}
 
-        # 🔍 Parse JSON safely
         try:
             candidates = json.loads(output)
         except json.JSONDecodeError:
@@ -204,6 +267,9 @@ async def jd_match(jd: str = Form(...)):
         return {"error": str(e)}
 
 
+# =========================
+# VALIDATION FUNCTIONS
+# =========================
 # USER AUTHENTICATION
 
 
@@ -215,8 +281,14 @@ def validate_password(password: str):
     return len(password) >= 6
 
 
+# =====================================================
+# UNIFIED AUTH
+# =====================================================
 @app.post("/signup-user/")
 async def signup_user(email: str = Form(...), password: str = Form(...)):
+
+    email = email.strip().lower()
+    password = password.strip()
 
     if not validate_email(email):
         return {"error": "Invalid email format"}
@@ -224,22 +296,20 @@ async def signup_user(email: str = Form(...), password: str = Form(...)):
     if not validate_password(password):
         return {"error": "Password must be at least 6 characters"}
 
-    existing_user = get_user(email)
-
-    if existing_user:
+    if get_user(email):
         return {"error": "User already exists"}
 
     password_hash = hash_password(password)
-
     create_user(email, password_hash)
 
     return {"message": "User registered successfully"}
 
+
 @app.post("/login-user/")
 async def login_user(email: str = Form(...), password: str = Form(...)):
 
-    if not validate_email(email):
-        return {"error": "Invalid email"}
+    email = email.strip().lower()
+    password = password.strip()
 
     user = get_user(email)
 
@@ -249,17 +319,14 @@ async def login_user(email: str = Form(...), password: str = Form(...)):
     if not verify_password(password, user["password_hash"]):
         return {"error": "Incorrect password"}
 
-    return {"message": "Login successful", "role": "user"}
+    return {"role": "user"}
 
-
-
-
-# =====================================================
-# HR AUTHENTICATION
-# =====================================================
 
 @app.post("/signup-hr/")
 async def signup_hr(email: str = Form(...), password: str = Form(...)):
+
+    email = email.strip().lower()
+    password = password.strip()
 
     if not validate_email(email):
         return {"error": "Invalid email format"}
@@ -267,16 +334,14 @@ async def signup_hr(email: str = Form(...), password: str = Form(...)):
     if not validate_password(password):
         return {"error": "Password must be at least 6 characters"}
 
-    existing_hr = get_hr(email)
-
-    if existing_hr:
-        return {"error": "HR account already exists"}
+    if get_hr(email):
+        return {"error": "HR already exists"}
 
     password_hash = hash_password(password)
-
     create_hr(email, password_hash)
 
     return {"message": "HR registered successfully"}
+
 
 @app.post("/login-hr/")
 async def login_hr(
@@ -285,11 +350,11 @@ async def login_hr(
     admin_key: str = Form(...)
 ):
 
+    email = email.strip().lower()
+    password = password.strip()
+
     if admin_key != ADMIN_KEY:
         return {"error": "Invalid admin key"}
-
-    if not validate_email(email):
-        return {"error": "Invalid email"}
 
     hr = get_hr(email)
 
@@ -299,7 +364,9 @@ async def login_hr(
     if not verify_password(password, hr["password_hash"]):
         return {"error": "Incorrect password"}
 
-    return {"message": "Login successful", "role": "hr"}
+    return {"role": "hr"}
+
+
 
 
 # -----------------------------
