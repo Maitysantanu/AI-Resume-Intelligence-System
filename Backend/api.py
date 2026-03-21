@@ -20,9 +20,8 @@ MAX_FILE_SIZE = 5 * 1024 * 1024  # 5MB
 
 app = FastAPI()
 
-# -----------------------------
+
 # CORS
-# -----------------------------
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -31,9 +30,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# -----------------------------
+
 # Path Setup
-# -----------------------------
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 ATS_SCRIPT = os.path.join(BASE_DIR, "ats_genai_score.py")
@@ -43,17 +42,12 @@ JD_SCRIPT = os.path.join(BASE_DIR, "hr_match.py")
 RESUME_FOLDER = os.path.join(BASE_DIR, "resumefile")
 STATIC_FOLDER = os.path.join(BASE_DIR, "static")
 
-# -----------------------------
-# Serve static files
-# -----------------------------
+# Serve static file
 app.mount("/static", StaticFiles(directory=STATIC_FOLDER), name="static")
 
 CURRENT_RESUME_PATH = None
 
 
-# -----------------------------
-# Landing Page
-# -----------------------------
 # Landing page
 @app.get("/")
 def home():
@@ -83,9 +77,9 @@ def dashboard_hr():
     return FileResponse(os.path.join(STATIC_FOLDER, "dashboard_hr.html"))
 
 
-# -----------------------------
+
 # Upload Resume
-# -----------------------------
+
 @app.post("/upload-resume/")
 async def upload_resume(file: UploadFile = File(...)):
 
@@ -118,9 +112,9 @@ async def upload_resume(file: UploadFile = File(...)):
         "message": "Resume uploaded successfully",
         "filename": safe_filename
     }
-# -----------------------------
+
 # Predict Job Role
-# -----------------------------
+
 @app.get("/predict-role/")
 async def predict_role():
 
@@ -146,9 +140,9 @@ async def predict_role():
             "stderr": process.stderr
         }
 
-# -----------------------------
+
 # ATS Score
-# -----------------------------
+
 @app.get("/ats-score/")
 async def ats_score():
 
@@ -164,9 +158,9 @@ async def ats_score():
     return {"result": process.stdout}
 
 
-# -----------------------------
+
 # JD Matching (HR)
-# -----------------------------
+
 @app.post("/jd-match/")
 async def jd_match(jd: str = Form(...)):
 
@@ -209,9 +203,9 @@ async def jd_match(jd: str = Form(...)):
     except Exception as e:
         return {"error": str(e)}
 
-# =====================================================
+
 # USER AUTHENTICATION
-# =====================================================
+
 
 def validate_email(email: str):
     pattern = r"^[\w\.-]+@[\w\.-]+\.\w+$"
