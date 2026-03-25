@@ -20,6 +20,23 @@ The system helps **job seekers improve their resumes** and enables **HR teams to
   - Weaknesses
   - Resume improvement suggestions
 
+##  ATS Improvement Dashboard
+A powerful feature to **track resume improvement over time**.
+
+###  What it does:
+- Upload **improved resume**
+- Compare **old vs new ATS score**
+- Visualize **score improvement**
+- Identify:
+  - Skills added  
+  - Skills still missing  
+
+###  Highlights:
+- Dynamic **score comparison cards**
+- Animated **progress bars**
+- Smart **skill gap analysis**
+- Clean, modern UI with responsive design
+
 ## HR Features
 - Enter **job description**
 - Automatically **match resumes with job description**
@@ -118,11 +135,13 @@ AI-Resume-Intelligence-System
 │ ├── signup.html
 │ ├── dashboard_user.html
 │ ├── dashboard_hr.html
+│ ├── compare.html # NEW
 │ ├── login.css
 │ ├── signup.css
 │ ├── user_dashboard.css
 │ ├── hr_dashboard.css
-│ └── script.js
+│ ├── compare.css 
+│ └── script.js 
 │
 ├── ats_genai_score.py
 ├── hr_match.py
@@ -138,7 +157,8 @@ AI-Resume-Intelligence-System
 1. Create an account or login  
 2. Upload resume  
 3. Predict job role  
-4. Check ATS score and improvement suggestions  
+4. Check ATS score and improvement suggestions
+5. Upload Improved Resume → View Comparison Dashboard
 
 ### HR Workflow
 1. Login as HR  
